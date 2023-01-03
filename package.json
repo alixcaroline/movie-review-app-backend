@@ -1,0 +1,22 @@
+{
+  "name": "movie-review-app-backend",
+  "version": "1.0.0",
+  "description": "node.js backend for a full stack movie review app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alixcaroline/movie-review-app-backend.git"
+  },
+  "author": "Caroline",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alixcaroline/movie-review-app-backend/issues"
+  },
+  "homepage": "https://github.com/alixcaroline/movie-review-app-backend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
