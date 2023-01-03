@@ -3,7 +3,13 @@ const express = require('express');
 //routes
 const userRouter = require('./routes/user');
 
+require('dotenv').config();
 const app = express();
-app.use(userRouter);
+app.use(express.json());
+require('./db/');
 
-app.listen(8000, () => console.log('server app listening on port 8000'));
+app.use('/api/user', userRouter);
+
+app.listen(process.env.PORT, () =>
+	console.log('server app listening on port ' + process.env.PORT),
+);
