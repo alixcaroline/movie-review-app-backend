@@ -80,7 +80,13 @@ exports.verifyEmail = async (req, res) => {
 		html: '<h1>Welcome to our app and thanks for choosing us.</h1>',
 	});
 
-	res.json({ message: 'Your email is verified.' });
+	// log in user when email is verified
+	const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+
+	res.json({
+		user: { id: user._id, name: user.name, email: user.email, token: jwtToken },
+		message: 'Your email is verified.',
+	});
 };
 
 exports.resendEmailVerificationToken = async (req, res) => {
