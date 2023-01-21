@@ -156,7 +156,7 @@ exports.forgetPassword = async (req, res) => {
 	});
 	await newPasswordResetToken.save();
 
-	const resetPasswordUrl = `http://localhost:3000/reset-password?token=${token}&id=${user._id}`;
+	const resetPasswordUrl = `http://localhost:3000/auth/reset-password?token=${token}&id=${user._id}`;
 
 	// send password reset link to our user
 	const transport = generateMailTransporter();
@@ -167,7 +167,7 @@ exports.forgetPassword = async (req, res) => {
 		subject: 'Reset password link',
 		html: `
       <p>Click the link to reset your password.</p>
-      <a href='${forgetPasswordUrl}'>Reset password</a>
+      <a href='${resetPasswordUrl}'>Reset password</a>
     `,
 	});
 
