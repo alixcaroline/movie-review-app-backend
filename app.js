@@ -5,6 +5,7 @@ const cors = require('cors');
 
 //routes
 const userRouter = require('./routes/user');
+const actorRouter = require('./routes/actor');
 const { handleNotFound } = require('./utils/helper');
 
 require('dotenv').config();
@@ -14,6 +15,7 @@ app.use(express.json());
 require('./db/');
 
 app.use('/api/user', userRouter);
+app.use('/api/actor', actorRouter);
 
 app.use('/*', handleNotFound);
 
