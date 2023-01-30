@@ -6,6 +6,7 @@ const cors = require('cors');
 //routes
 const userRouter = require('./routes/user');
 const actorRouter = require('./routes/actor');
+const movieRouter = require('./routes/movie');
 const { handleNotFound } = require('./utils/helper');
 
 require('dotenv').config();
@@ -16,6 +17,7 @@ require('./db/');
 
 app.use('/api/user', userRouter);
 app.use('/api/actor', actorRouter);
+app.use('/api/movie', movieRouter);
 
 app.use('/*', handleNotFound);
 

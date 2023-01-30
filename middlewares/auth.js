@@ -4,6 +4,7 @@ const User = require('../models/user');
 
 exports.isAuth = async (req, res, next) => {
 	const token = req.headers?.authorization;
+	console.log(req);
 
 	if (!token) return sendError(res, 'Invalid token!');
 

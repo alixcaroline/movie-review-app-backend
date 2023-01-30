@@ -1,4 +1,6 @@
 const { check, validationResult } = require('express-validator');
+const { isValidObjectId } = require('mongoose');
+const genres = require('../utils/genres');
 
 exports.signInValidator = [
 	check('email').normalizeEmail().isEmail().withMessage('Email is invalid'),
@@ -42,4 +44,76 @@ exports.actorInfoValidator = [
 		.not()
 		.isEmpty()
 		.withMessage('Gender is a required field'),
+];
+
+exports.validateMovie = [
+	check('title').trim().not().isEmpty().withMessage('Title is missing!'),
+	check('storyLine')
+		.trim()
+		.not()
+		.isEmpty()
+		.withMessage('Storyline is important!'),
+	check('language').trim().not().isEmpty().withMessage('Language is missing!'),
+	check('status')
+		.isIn(['public', 'private'])
+		.withMessage('status must be public or private!'),
+	check('releaseDate').isDate().withMessage('Release date is missing!'),
+	check('genres')
+		.isArray()
+		.withMessage('Genres must be an array of strings!')
+		.custom((value) => {
+			for (let g of value) {
+				if (!genres.includes(g)) throw Error('Invalid genres!');
+			}
+			return true;
+		}),
+	check('tags')
+		.isArray({ min: 1 })
+		.withMessage('Tags must be an array of strings!')
+		.custom((tags) => {
+			for (let tag of tags) {
+				if (typeof tag !== 'string')
+					throw Error('Tags must be an array of strings');
+			}
+			return true;
+		}),
+	check('cast')
+		.isArray()
+		.withMessage('cast must be an array of objects!')
+		.custom((cast) => {
+			for (let c of cast) {
+				if (!isValidObjectId(c.id)) throw Error('Invalid cast id inside cast!');
+				if (!c.roleAs?.trim()) throw Error('Role as is missing inside cast!');
+				if (typeof c.leadActor !== 'boolean')
+					throw Error(
+						'Only accepted boolean value inside leadActor inside cast',
+					);
+			}
+			return true;
+		}),
+	check('trailerInfo')
+		.isObject()
+		.withMessage('Trailer info must be an objct with url and public_id')
+		.custom(({ url, public_id }) => {
+			try {
+				const result = new URL(url);
+				if (!result.protocol.includes('http')) {
+					throw Error('Trailer url is invalid!');
+				}
+
+				//public id is in cloudinary url after last / and before .mp4 us array to extract id
+				const arr = url.split('/');
+				const publicId = arr[arr.lenghth - 1].split('.')[0];
+				if (publicId !== public_id) {
+					throw Error('Trailer public_id is invalid');
+				}
+			} catch (err) {
+				throw Error('Trailer url is invalid!');
+			}
+			return true;
+		}),
+	check('poster').custom((_, { req }) => {
+		if (!req.file) throw Error('Poster file is missing!');
+		return true;
+	}),
 ];

@@ -21,7 +21,7 @@ exports.handleNotFound = (req, res) => {
 	this.sendError(res, 'Not found', 404);
 };
 
-exports.UploadImageToCloud = async (file) => {
+exports.uploadImageToCloud = async (file) => {
 	const { secure_url: url, public_id } = await cloudinary.uploader.upload(
 		file,
 		{ gravity: 'face', height: 500, width: 500, crop: 'thumb' },

@@ -3,23 +3,22 @@ const Actor = require('../models/actor');
 const cloudinary = require('../cloud');
 const {
 	sendError,
-	UploadImageToCloud,
+	uploadImageToCloud,
 	formatActor,
 } = require('../utils/helper');
-const { uploader } = require('../cloud');
 
 exports.createActor = async (req, res) => {
 	const { name, about, gender } = req.body;
-	const file = { req };
+	const { file } = req;
 
 	const newActor = new Actor({ name, about, gender });
 
 	if (file) {
-		const { url, public_id } = await UploadImageToCloud(file.path);
-		actor.avatar = { url, public_id };
+		const { url, public_id } = await uploadImageToCloud(file.path);
+		newActor.avatar = { url, public_id };
 	}
 
-	await newActor.save;
+	await newActor.save();
 	res.status(201).json(formatActor(newActor));
 };
 
@@ -33,7 +32,7 @@ exports.updateActor = async (req, res) => {
 	if (!actor) return sendError(res, 'Invalid request, record not found!');
 
 	//remove previous image file when uploading a new one
-	const public_id = actor.avatar.public_id;
+	const public_id = actor.avatar?.public_id;
 	if (public_id && file) {
 		const { result } = await cloudinary.uploader.destroy(public_id);
 		if (result !== 'ok')
@@ -42,7 +41,7 @@ exports.updateActor = async (req, res) => {
 
 	//upload file when there is a new image
 	if (file) {
-		const { url, public_id } = await UploadImageToCloud(file.path);
+		const { url, public_id } = await uploadImageToCloud(file.path);
 		actor.avatar = { url, public_id };
 	}
 
@@ -50,9 +49,9 @@ exports.updateActor = async (req, res) => {
 	actor.about = about;
 	actor.gender = gender;
 
-	await Actor.save();
+	await actor.save();
 
-	res.status(201).json(formatActor(newActor));
+	res.status(201).json(formatActor(actor));
 };
 
 exports.removeActor = async (req, res) => {
