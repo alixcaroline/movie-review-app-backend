@@ -82,7 +82,8 @@ exports.validateMovie = [
 		.withMessage('cast must be an array of objects!')
 		.custom((cast) => {
 			for (let c of cast) {
-				if (!isValidObjectId(c.id)) throw Error('Invalid cast id inside cast!');
+				if (!isValidObjectId(c.actor))
+					throw Error('Invalid cast actor inside cast!');
 				if (!c.roleAs?.trim()) throw Error('Role as is missing inside cast!');
 				if (typeof c.leadActor !== 'boolean')
 					throw Error(
@@ -91,19 +92,20 @@ exports.validateMovie = [
 			}
 			return true;
 		}),
-	check('trailerInfo')
+	check('trailer')
 		.isObject()
-		.withMessage('Trailer info must be an objct with url and public_id')
+		.withMessage('Trailer must be an object with url and public_id')
 		.custom(({ url, public_id }) => {
 			try {
 				const result = new URL(url);
+
 				if (!result.protocol.includes('http')) {
 					throw Error('Trailer url is invalid!');
 				}
 
 				//public id is in cloudinary url after last / and before .mp4 us array to extract id
 				const arr = url.split('/');
-				const publicId = arr[arr.lenghth - 1].split('.')[0];
+				const publicId = arr[arr.length - 1].split('.')[0];
 				if (publicId !== public_id) {
 					throw Error('Trailer public_id is invalid');
 				}
