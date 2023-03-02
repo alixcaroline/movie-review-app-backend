@@ -51,7 +51,7 @@ exports.updateActor = async (req, res) => {
 
 	await actor.save();
 
-	res.status(201).json(formatActor(actor));
+	res.status(201).json({ actor: formatActor(actor) });
 };
 
 exports.removeActor = async (req, res) => {
@@ -75,8 +75,17 @@ exports.removeActor = async (req, res) => {
 };
 
 exports.searchActor = async (req, res) => {
-	const { query } = req;
-	const result = await Actor.find({ $text: { $search: `"${query.name}"` } });
+	const { name } = req.query;
+
+	//search by complete name
+	// const result = await Actor.find({ $text: { $search: `"${name}"` } });
+
+	if (!name.trim()) return sendError(res, 'Invalid request');
+
+	//search by part of name, no matter lowercase or uppercase
+	const result = await Actor.find({
+		name: { $regex: name, $options: 'i' },
+	});
 
 	const actors = result.map((actor) => formatActor(actor));
 
