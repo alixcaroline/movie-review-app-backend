@@ -100,3 +100,16 @@ exports.getSingleActor = async (req, res) => {
 	if (!actor) return sendError(res, 'Invalid request, actor not found!', 404);
 	res.json(formatActor(actor));
 };
+
+exports.getActors = async (req, res) => {
+	const { pageNo, limit } = req.query;
+
+	const result = await Actor.find({})
+		.sort({ createdAt: -1 })
+		.skip(parseInt(pageNo) * parseInt(limit))
+		.limit(parseInt(limit));
+
+	const actors = result.map((actor) => formatActor(actor));
+
+	res.json({ profiles: actors });
+};
