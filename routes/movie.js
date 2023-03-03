@@ -9,6 +9,7 @@ const {
 	deleteMovie,
 	getMovies,
 	getMovieForUpdate,
+	searchMovies,
 } = require('../controllers/movie');
 const { parseData } = require('../utils/helper');
 const {
@@ -63,5 +64,7 @@ router.delete('/:movieId', isAuth, isAdmin, deleteMovie);
 router.get('/movies', isAuth, isAdmin, getMovies);
 
 router.get('/for-update/:movieId', isAuth, isAdmin, getMovieForUpdate);
+
+router.get('/search', isAuth, isAdmin, searchMovies);
 
 module.exports = router;
