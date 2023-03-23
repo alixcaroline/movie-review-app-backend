@@ -92,7 +92,7 @@ exports.getReviewsByMovie = async (req, res) => {
 			path: 'reviews',
 			populate: { path: 'owner', select: 'name' },
 		})
-		.select('reviews');
+		.select('reviews title');
 
 	const reviews = movie.reviews.map((r) => {
 		const { owner, content, rating, _id: reviewID } = r;
@@ -108,5 +108,5 @@ exports.getReviewsByMovie = async (req, res) => {
 		};
 	});
 
-	res.json({ reviews });
+	res.json({ movie: { title: movie.title, reviews } });
 };
