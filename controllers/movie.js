@@ -102,8 +102,10 @@ exports.createMovie = async (req, res) => {
 	await newMovie.save();
 
 	res.status(201).json({
-		id: newMovie._id,
-		title,
+		movie: {
+			id: newMovie._id,
+			title,
+		},
 	});
 };
 
@@ -310,6 +312,7 @@ exports.getMovies = async (req, res) => {
 		id: movie._id,
 		title: movie.title,
 		poster: movie.poster?.url,
+		responsivePosters: movie.poster?.responsive,
 		genres: movie.genres,
 		status: movie.status,
 	}));
@@ -384,6 +387,7 @@ exports.getLatestUploads = async (req, res) => {
 			title: m.title,
 			storyLine: m.storyLine,
 			poster: m.poster?.url,
+			responsivePosters: m.poster?.responsive,
 			trailer: m.trailer?.url,
 		};
 	});
@@ -421,7 +425,7 @@ exports.getSingleMovie = async (req, res) => {
 		cast,
 		writers,
 		director,
-		releseDate,
+		releaseDate,
 		genres,
 		tags,
 		language,
@@ -435,7 +439,7 @@ exports.getSingleMovie = async (req, res) => {
 			id,
 			title,
 			storyLine,
-			releseDate,
+			releaseDate,
 			genres,
 			tags,
 			language,
