@@ -127,11 +127,7 @@ exports.topRatedMoviesPipeline = (type) => {
 			},
 		},
 		{
-			$match: {
-				reviews: { $exists: true },
-				status: { $eq: 'public' },
-				type: { $eq: type },
-			},
+			$match: matchOptions,
 		},
 		{
 			$project: {
